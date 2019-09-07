@@ -56,6 +56,19 @@ func TestIncomePost(t *testing.T) {
 	if w.Body.String() != want {
 		t.Fatalf("want=%s, got=%s", want, w.Body.String())
 	}
+
+	t.Run("invalidJson", func(t *testing.T) {
+		reqBody = []byte(`{"income"}`)
+		r := httptest.NewRequest("POST", baseURL+"/income", bytes.NewBuffer(reqBody))
+
+		w := httptest.NewRecorder()
+
+		s.ServeHTTP(w, r)
+
+		if w.Code != http.StatusBadRequest {
+			t.Fatalf("response code: %d", w.Code)
+		}
+	})
 }
 
 func TestExpensePost(t *testing.T) {
@@ -76,6 +89,19 @@ func TestExpensePost(t *testing.T) {
 	if w.Body.String() != want {
 		t.Fatalf("want=%s, got=%s", want, w.Body.String())
 	}
+
+	t.Run("invalidJson", func(t *testing.T) {
+		reqBody = []byte(`{"expense"}`)
+		r := httptest.NewRequest("POST", baseURL+"/expense", bytes.NewBuffer(reqBody))
+
+		w := httptest.NewRecorder()
+
+		s.ServeHTTP(w, r)
+
+		if w.Code != http.StatusBadRequest {
+			t.Fatalf("response code: %d", w.Code)
+		}
+	})
 }
 
 func TestTransactions(t *testing.T) {

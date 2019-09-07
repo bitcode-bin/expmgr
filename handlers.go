@@ -34,7 +34,9 @@ func (s *server) handleIncomePost() http.HandlerFunc {
 		log.Info("")
 
 		var req request
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		dec := json.NewDecoder(r.Body)
+		dec.DisallowUnknownFields()
+		if err := dec.Decode(&req); err != nil {
 			log.WithFields(map[string]interface{}{
 				"error": err,
 			}).Error("failed to decode request")
@@ -68,7 +70,9 @@ func (s *server) handleExpensePost() http.HandlerFunc {
 		log.Info("")
 
 		var req request
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		dec := json.NewDecoder(r.Body)
+		dec.DisallowUnknownFields()
+		if err := dec.Decode(&req); err != nil {
 			log.WithFields(map[string]interface{}{
 				"error": err,
 			}).Error("failed to decode request")
