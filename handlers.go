@@ -7,11 +7,6 @@ import (
 
 func (s *server) handleBalanceGet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		s.log.WithFields(map[string]interface{}{
-			"method": r.Method,
-			"path":   r.URL.String(),
-		}).Info("")
-
 		bal := s.wallet.Balance()
 		data := map[string]interface{}{
 			"balance": bal,
@@ -26,19 +21,16 @@ func (s *server) handleIncomePost() http.HandlerFunc {
 		Income int `json:"income"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		log := s.log.WithFields(map[string]interface{}{
-			"method": r.Method,
-			"path":   r.URL.String(),
-		})
-
-		log.Info("")
+		reqID := r.Context().Value(CtxKeyRequestID).(string)
 
 		var req request
+
 		dec := json.NewDecoder(r.Body)
 		dec.DisallowUnknownFields()
 		if err := dec.Decode(&req); err != nil {
-			log.WithFields(map[string]interface{}{
-				"error": err,
+			s.log.WithFields(map[string]interface{}{
+				"requestId": reqID,
+				"error":     err,
 			}).Error("failed to decode request")
 
 			data := map[string]interface{}{"error": "invalid json"}
@@ -62,19 +54,16 @@ func (s *server) handleExpensePost() http.HandlerFunc {
 		Expense int `json:"expense"`
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		log := s.log.WithFields(map[string]interface{}{
-			"method": r.Method,
-			"path":   r.URL.String(),
-		})
-
-		log.Info("")
+		reqID := r.Context().Value(CtxKeyRequestID).(string)
 
 		var req request
+
 		dec := json.NewDecoder(r.Body)
 		dec.DisallowUnknownFields()
 		if err := dec.Decode(&req); err != nil {
-			log.WithFields(map[string]interface{}{
-				"error": err,
+			s.log.WithFields(map[string]interface{}{
+				"requestId": reqID,
+				"error":     err,
 			}).Error("failed to decode request")
 
 			data := map[string]interface{}{"error": "invalid json"}

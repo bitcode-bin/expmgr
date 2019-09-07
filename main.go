@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -9,21 +10,25 @@ import (
 )
 
 func main() {
-	if err := run(); err != nil {
+	var port string
+	flag.StringVar(&port, "port", "9000", "server port")
+	flag.Parse()
+
+	if err := run(port); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to start: %v", err)
 		os.Exit(1)
 	}
 }
 
-func run() error {
+func run(port string) error {
 	s := &server{
 		wallet: NewWallet(100),
 		log:    logger.NewDefaultLogger(),
 	}
 	s.Init()
 
-	s.log.Info("listening")
-	http.ListenAndServe(":9000", s)
+	s.log.Info("listening on " + port)
+	http.ListenAndServe(":"+port, s)
 
 	return nil
 }
