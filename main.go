@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/bitcode-bin/expmgr/logger"
 )
 
 func main() {
@@ -16,11 +18,12 @@ func main() {
 func run() error {
 	s := &server{
 		wallet: NewWallet(100),
-		log:    NewLogger(),
+		log:    logger.NewDefaultLogger(),
 	}
 	s.Init()
 
-	fmt.Println("listening")
+	s.log.Info("listening")
 	http.ListenAndServe(":9000", s)
+
 	return nil
 }

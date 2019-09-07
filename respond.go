@@ -8,7 +8,9 @@ import (
 func (s *server) respond(w http.ResponseWriter, r *http.Request, status int, data interface{}) {
 	buf, err := json.Marshal(data)
 	if err != nil {
-		s.log.Error(err)
+		s.log.WithFields(map[string]interface{}{
+			"error": err,
+		}).Error("failed to encode")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

@@ -3,13 +3,14 @@ package main
 import (
 	"net/http"
 
+	"github.com/bitcode-bin/expmgr/logger"
 	"github.com/go-chi/chi"
 )
 
 type server struct {
 	wallet *Wallet
 	router chi.Router
-	log    Logger
+	log    logger.Logger
 }
 
 func (s *server) Init() {
@@ -24,18 +25,7 @@ func (s *server) routes() {
 	s.router = chi.NewRouter()
 	s.router.Route("/api", func(r chi.Router) {
 		r.Get("/balance", s.handleBalanceGet())
+		r.Post("/income", s.handleIncomePost())
+		r.Post("/expense", s.handleExpensePost())
 	})
-}
-
-func (s *server) handleBalanceGet() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		s.log.Infof("%s %s", r.Method, r.URL.String())
-
-		bal := s.wallet.Balance()
-		data := map[string]interface{}{
-			"balance": bal,
-		}
-
-		s.respond(w, r, http.StatusOK, data)
-	}
 }
