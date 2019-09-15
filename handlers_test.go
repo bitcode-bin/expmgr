@@ -6,15 +6,20 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/bitcode-bin/expmgr/inmemory"
 	"github.com/bitcode-bin/expmgr/logger"
 )
 
 const baseURL string = "/api"
 
+func newWallet(startingBalance int) *inmemory.Wallet {
+	return inmemory.NewWallet(startingBalance)
+}
+
 func newServer() *server {
 	s := &server{
 		log:    logger.NewNoopLogger(),
-		wallet: &Wallet{},
+		wallet: newWallet(0),
 	}
 	s.Init()
 	return s
@@ -106,7 +111,7 @@ func TestExpensePost(t *testing.T) {
 
 func TestTransactions(t *testing.T) {
 	s := newServer()
-	s.wallet.balance = 500
+	s.wallet = newWallet(500)
 
 	// use slice, not map, since
 	// these tests MUST be called in order

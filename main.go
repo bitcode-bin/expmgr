@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/bitcode-bin/expmgr/inmemory"
 	"github.com/bitcode-bin/expmgr/logger"
 )
 
@@ -22,7 +23,7 @@ func main() {
 
 func run(port string) error {
 	s := &server{
-		wallet: NewWallet(100),
+		wallet: inmemory.NewWallet(100),
 		log:    logger.NewDefaultLogger(),
 	}
 	s.Init()

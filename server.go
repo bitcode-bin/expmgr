@@ -8,7 +8,7 @@ import (
 )
 
 type server struct {
-	wallet *Wallet
+	wallet WalletService
 	router chi.Router
 	log    logger.Logger
 }

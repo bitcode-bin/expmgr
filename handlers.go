@@ -38,8 +38,7 @@ func (s *server) handleIncomePost() http.HandlerFunc {
 			return
 		}
 
-		s.wallet.AddIncome(req.Income)
-		bal := s.wallet.Balance()
+		bal := s.wallet.AddIncome(req.Income)
 
 		data := map[string]interface{}{
 			"balance": bal,
@@ -71,8 +70,7 @@ func (s *server) handleExpensePost() http.HandlerFunc {
 			return
 		}
 
-		s.wallet.AddExpense(req.Expense)
-		bal := s.wallet.Balance()
+		bal := s.wallet.AddExpense(req.Expense)
 
 		data := map[string]interface{}{
 			"balance": bal,
