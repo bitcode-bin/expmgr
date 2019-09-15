@@ -38,6 +38,13 @@ func (s *server) handleIncomePost() http.HandlerFunc {
 			return
 		}
 
+		// validate
+		if req.Income < 0 {
+			data := map[string]interface{}{"error": "negative income is not allowed"}
+			s.respond(w, r, http.StatusBadRequest, data)
+			return
+		}
+
 		bal := s.wallet.AddIncome(req.Income)
 
 		data := map[string]interface{}{
@@ -66,6 +73,13 @@ func (s *server) handleExpensePost() http.HandlerFunc {
 			}).Error("failed to decode request")
 
 			data := map[string]interface{}{"error": "invalid json"}
+			s.respond(w, r, http.StatusBadRequest, data)
+			return
+		}
+
+		// validate
+		if req.Expense < 0 {
+			data := map[string]interface{}{"error": "negative expense is not allowed"}
 			s.respond(w, r, http.StatusBadRequest, data)
 			return
 		}

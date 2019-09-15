@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -74,6 +75,30 @@ func TestIncomePost(t *testing.T) {
 			t.Fatalf("response code: %d", w.Code)
 		}
 	})
+
+	t.Run("negativeAmount", func(t *testing.T) {
+		reqBody = []byte(`{"income": -100}`)
+		r := httptest.NewRequest("POST", baseURL+"/income", bytes.NewBuffer(reqBody))
+
+		w := httptest.NewRecorder()
+
+		s.ServeHTTP(w, r)
+
+		if w.Code != http.StatusBadRequest {
+			t.Fatalf("response code: %d", w.Code)
+		}
+
+		var response map[string]interface{}
+		if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
+			isNil(t, err)
+		}
+
+		errMsg := response["error"].(string)
+		want := "negative income is not allowed"
+		if errMsg != want {
+			t.Fatalf("error msg: want=%s, got=%s", want, errMsg)
+		}
+	})
 }
 
 func TestExpensePost(t *testing.T) {
@@ -105,6 +130,29 @@ func TestExpensePost(t *testing.T) {
 
 		if w.Code != http.StatusBadRequest {
 			t.Fatalf("response code: %d", w.Code)
+		}
+	})
+	t.Run("negativeAmount", func(t *testing.T) {
+		reqBody = []byte(`{"expense": -100}`)
+		r := httptest.NewRequest("POST", baseURL+"/expense", bytes.NewBuffer(reqBody))
+
+		w := httptest.NewRecorder()
+
+		s.ServeHTTP(w, r)
+
+		if w.Code != http.StatusBadRequest {
+			t.Fatalf("response code: %d", w.Code)
+		}
+
+		var response map[string]interface{}
+		if err := json.Unmarshal(w.Body.Bytes(), &response); err != nil {
+			isNil(t, err)
+		}
+
+		errMsg := response["error"].(string)
+		want := "negative expense is not allowed"
+		if errMsg != want {
+			t.Fatalf("error msg: want=%s, got=%s", want, errMsg)
 		}
 	})
 }
