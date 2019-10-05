@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"net/http"
 	"os"
@@ -11,9 +10,10 @@ import (
 )
 
 func main() {
-	var port string
-	flag.StringVar(&port, "port", "9000", "server port")
-	flag.Parse()
+	//var port string
+	//flag.StringVar(&port, "port", "9000", "server port")
+	//flag.Parse()
+	port := os.Getenv("PORT")
 
 	if err := run(port); err != nil {
 		fmt.Fprintf(os.Stderr, "failed to start: %v", err)
