@@ -1,3 +1,7 @@
 package main
 
-type DBService interface{}
+type DBService interface {
+	Balance() (int, error)
+	SetBalance(int) error
+	NewTransaction(int) error
+}
