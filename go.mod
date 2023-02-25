@@ -8,5 +8,5 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/rs/xid v1.2.1
 	github.com/sirupsen/logrus v1.4.2
-	golang.org/x/sys v0.0.0-20190920190810-ef0ce1748380 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 )
